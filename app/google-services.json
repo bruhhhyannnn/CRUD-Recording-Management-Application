@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "677558306234",
+    "project_id": "crud-recording-management-app",
+    "storage_bucket": "crud-recording-management-app.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:677558306234:android:33ace83348f68bb5440983",
+        "android_client_info": {
+          "package_name": "com.example.crud_management_application"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCXemLIacoMpzGjUKrg8znfXuR721Thmtw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

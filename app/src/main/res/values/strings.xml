@@ -1,3 +1,7 @@
 <resources>
+    <!-- APP NAME -->
     <string name="app_name">CRUD Recoding Management</string>
+
+    <!-- COPYRIGHT TEXT -->
+    <string name="copyright_text">Copyright @2024 CRUD Recoding Management. All rights reserved.</string>
 </resources>
