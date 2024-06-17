@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
-        android:padding="30dp"
+        android:padding="20dp"
         android:text="@string/app_name"
         android:textSize="30sp"
         android:textStyle="bold" />
@@ -26,11 +26,22 @@
         android:orientation="vertical"
         android:padding="20dp">
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/layout_copyright"
+            android:layout_marginBottom="10dp"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:text="Create" />
+
         <EditText
             android:id="@+id/first_name_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter your first name"
+            android:padding="10dp"
             android:inputType="textPersonName" />
 
         <EditText
@@ -38,6 +49,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Middle Initial"
+            android:padding="10dp"
             android:inputType="textCapCharacters" />
 
         <EditText
@@ -45,6 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter your last name"
+            android:padding="10dp"
             android:inputType="textPersonName" />
 
         <EditText
@@ -52,13 +65,15 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:hint="Enter your age"
+            android:padding="10dp"
             android:inputType="number" />
 
         <EditText
-            android:id="@+id/date_text"
+            android:id="@+id/date_of_birth_text"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Enter your date of birth e.i., 01/01/2000"
+            android:padding="10dp"
             android:inputType="date" />
 
         <RadioGroup
@@ -81,6 +96,69 @@
                 android:text="Female" />
         </RadioGroup>
 
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:background="@drawable/layout_copyright"
+            android:layout_marginBottom="10dp"
+            android:textStyle="bold"
+            android:textSize="22sp"
+            android:text="Read" />
+
+        <LinearLayout
+            android:id="@+id/read_text_layout"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"
+            android:orientation="vertical">
+
+            <TextView
+                android:id="@+id/first_name_read_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="First Name: " />
+            <TextView
+                android:id="@+id/middle_name_read_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Middle Name: " />
+            <TextView
+                android:id="@+id/last_name_read_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Last Name: " />
+            <TextView
+                android:id="@+id/age_read_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Age: " />
+            <TextView
+                android:id="@+id/date_of_birth_read_text"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Date of Birth: " />
+            <RadioGroup
+                android:id="@+id/gender_radio_group_read"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:orientation="horizontal">
+
+                <RadioButton
+                    android:id="@+id/male_radio_button_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Male" />
+
+                <RadioButton
+                    android:id="@+id/female_radio_button_read"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Female" />
+            </RadioGroup>
+        </LinearLayout>
+
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -91,24 +169,35 @@
                 android:id="@+id/create_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_color"
                 android:text="Create" />
+            <ProgressBar
+                android:id="@+id/create_progress_bar"
+                android:layout_width="30dp"
+                android:visibility="gone"
+                android:layout_marginRight="10dp"
+                android:layout_marginLeft="10dp"
+                android:layout_height="wrap_content"/>
 
             <Button
                 android:id="@+id/read_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_color"
                 android:text="Read" />
 
             <Button
                 android:id="@+id/update_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_color"
                 android:text="Update" />
 
             <Button
                 android:id="@+id/delete_button"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:backgroundTint="@color/button_color"
                 android:text="Delete" />
         </LinearLayout>
     </LinearLayout>
@@ -116,7 +205,7 @@
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp">
+        android:layout_marginBottom="20dp">
 
         <!-- FOOTER -->
         <TextView
@@ -129,6 +218,6 @@
             android:padding="20dp"
             android:text="@string/copyright_text"
             android:textAlignment="center"
-            android:textColor="@color/cardview_dark_background"></TextView>
+            android:textColor="@color/cardview_dark_background" />
     </RelativeLayout>
 </LinearLayout>
