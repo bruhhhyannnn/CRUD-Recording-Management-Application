@@ -158,6 +158,14 @@
                     android:text="Female" />
             </RadioGroup>
         </LinearLayout>
+        <ProgressBar
+            android:id="@+id/read_progress_bar"
+            android:layout_width="30dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginRight="10dp"
+            android:layout_marginLeft="10dp"
+            android:visibility="gone" />
 
         <LinearLayout
             android:layout_width="match_parent"
