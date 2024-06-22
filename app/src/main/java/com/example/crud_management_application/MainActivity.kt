@@ -11,12 +11,19 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.example.crud_management_application.adapters.UsersAdapter
+import com.example.crud_management_application.data_models.UserModel
 import com.example.crud_management_application.databinding.ActivityMainBinding
 import com.google.firebase.Firebase
 import com.google.firebase.firestore.FieldValue
 import com.google.firebase.firestore.firestore
 
 class MainActivity : AppCompatActivity() {
+
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var userList: ArrayList<UserModel>
 
     lateinit var binding: ActivityMainBinding
 
@@ -64,20 +71,20 @@ class MainActivity : AppCompatActivity() {
 
     private fun getData() {
         val firstName = binding.firstNameText.text.toString()
-        val middleName = binding.middleInitialText.text.toString()
+        val middleInitial = binding.middleInitialText.text.toString()
         val lastName = binding.lastNameText.text.toString()
         val age = binding.ageText.text.toString()
         val dateOfBirth = binding.dateOfBirthText.text.toString()
         val sex = binding.genderRadioGroup.checkedRadioButtonId
         val gender = if (sex == binding.maleRadioButton.id) "Male" else "Female"
 
-        addDataToFirebase(firstName, middleName, lastName, age, dateOfBirth, gender)
+        addDataToFirebase(firstName, middleInitial, lastName, age, dateOfBirth, gender)
     }
 
-    private fun addDataToFirebase(firstName: String, middleName: String, lastName: String, age: String, dateOfBirth: String, gender: String) {
+    private fun addDataToFirebase(firstName: String, middleInitial: String, lastName: String, age: String, dateOfBirth: String, gender: String) {
         val data = hashMapOf(
             "firstName" to firstName,
-            "middleName" to middleName,
+            "middleInitial" to middleInitial,
             "lastName" to lastName,
             "age" to age,
             "dateOfBirth" to dateOfBirth,
@@ -90,46 +97,46 @@ class MainActivity : AppCompatActivity() {
             .collection("users")
             .add(data)
             .addOnSuccessListener {
-                Toast.makeText(this, "Data added successfully", Toast.LENGTH_SHORT).show()
-                binding.firstNameText.text.clear()
-                binding.middleInitialText.text.clear()
-                binding.lastNameText.text.clear()
-                binding.ageText.text.clear()
-                binding.dateOfBirthText.text.clear()
-                setInProgress(false, "create")
+                val userId = mapOf(
+                    "userID" to it.id
+                )
+                Firebase.firestore
+                    .collection("users")
+                    .document(it.id)
+                    .update(userId)
+                    .addOnSuccessListener {
+                        Toast.makeText(this, "Data added successfully", Toast.LENGTH_SHORT).show()
+                        binding.firstNameText.text.clear()
+                        binding.middleInitialText.text.clear()
+                        binding.lastNameText.text.clear()
+                        binding.ageText.text.clear()
+                        binding.dateOfBirthText.text.clear()
+                        setInProgress(false, "create")
+                    }
             }
     }
 
     private fun readDataFromFirebase() {
 
         // Read Data Whole
-        setInProgress(true, "read")
-        Firebase.firestore
-            .collection("users")
-            .document("user1")
-            .get()
-            .addOnSuccessListener {
-                if (it.exists()) {
-                    val firstName = it.getString("firstName")
-                    val middleName = it.getString("middleName")
-                    val lastName = it.getString("lastName")
-                    val age = it.getString("age")
-                    val dateOfBirth = it.getString("dateOfBirth")
-                    val gender = it.getString("gender")
-
-                    binding.firstNameReadText.text = "First Name: $firstName"
-                    binding.middleNameReadText.text = "Middle Initial: $middleName"
-                    binding.lastNameReadText.text = "Last Name: $lastName"
-                    binding.ageReadText.text = "Age: $age"
-                    binding.dateOfBirthReadText.text = "Date of Birth: $dateOfBirth"
-                    binding.genderRadioGroupRead.check(if (gender == "Male") binding.maleRadioButtonRead.id else binding.femaleRadioButtonRead.id)
-
-                    setInProgress(false, "read")
-                    binding.readTextLayout.visibility = View.VISIBLE
-
-                    Toast.makeText(this, "Data read successfully", Toast.LENGTH_SHORT).show()
-                }
-            }
+//        setInProgress(true, "read")
+//        Firebase.firestore
+//            .collection("users")
+//            .document("user1")
+//            .get()
+//            .addOnSuccessListener {
+//                if (it.exists()) {
+//                    val firstName = it.getString("firstName").toString()
+//                    val middleName = it.getString("middleName").toString()
+//                    val lastName = it.getString("lastName").toString()
+//                    val age = it.getString("age").toString()
+//                    val dateOfBirth = it.getString("dateOfBirth").toString()
+//                    val gender = it.getString("gender").toString()
+//
+//                    updateUI(firstName, middleName, lastName, age, dateOfBirth, gender)
+//                    setInProgress(false, "read")
+//                }
+//            }
 
         // Read Data Specific
 //        setInProgress(true, "read")
@@ -148,6 +155,45 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 
+
+        val view = LayoutInflater.from(this).inflate(R.layout.custom_dialog_read, null)
+
+        recyclerView = view.findViewById(R.id.read_recycler_view)
+        recyclerView.layoutManager = LinearLayoutManager(this)
+        userList = arrayListOf()
+
+        val builder = AlertDialog.Builder(this)
+            .setTitle("Read Data")
+            .setView(view)
+        val dialog = builder.create()
+        dialog.show()
+
+        setInProgress(true, "read")
+        Firebase.firestore
+            .collection("users")
+            .get()
+            .addOnSuccessListener { documents ->
+                if (documents != null) {
+                    for (document in documents) {
+                        val user = document.toObject(UserModel::class.java)
+                        userList.add(user)
+                    }
+                    recyclerView.adapter = UsersAdapter(userList)
+                }
+            }
+    }
+
+    private fun updateUI(firstName: String, middleInitial: String, lastName: String, age: String, dateOfBirth: String, gender: String) {
+        binding.firstNameReadText.text = "First Name: $firstName"
+        binding.middleNameReadText.text = "Middle Initial: $middleInitial"
+        binding.lastNameReadText.text = "Last Name: $lastName"
+        binding.ageReadText.text = "Age: $age"
+        binding.dateOfBirthReadText.text = "Date of Birth: $dateOfBirth"
+        binding.genderRadioGroupRead.check(if (gender == "Male") binding.maleRadioButtonRead.id else binding.femaleRadioButtonRead.id)
+
+        binding.readTextLayout.visibility = View.VISIBLE
+
+        Toast.makeText(this, "Data read successfully", Toast.LENGTH_SHORT).show()
     }
 
     private fun updateDataToFirebase() {
@@ -178,7 +224,7 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(this, "Updated Whole Data", Toast.LENGTH_SHORT).show()
 //            }
 
-        val view = LayoutInflater.from(this).inflate(R.layout.custom_dialog, null)
+        val view = LayoutInflater.from(this).inflate(R.layout.custom_dialog_update, null)
         val builder = AlertDialog.Builder(this)
             .setTitle("Enter Data")
             .setView(view)
