@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun setInProgress(inProgress: Boolean, from: String) {
+    private fun setInProgress(inProgress: Boolean) {
         if (inProgress) {
             binding.createProgressBar.visibility = View.VISIBLE
             binding.createButton.visibility = View.GONE
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity() {
         )
 
         // add data (with auto id for document)
-        setInProgress(true, "create")
+        setInProgress(true)
         Firebase.firestore
             .collection("users")
             .add(data)
@@ -100,7 +100,7 @@ class MainActivity : AppCompatActivity() {
                         binding.lastNameText.text.clear()
                         binding.ageText.text.clear()
                         binding.dateOfBirthText.text.clear()
-                        setInProgress(false, "create")
+                        setInProgress(false)
                     }
             }
     }
@@ -144,13 +144,17 @@ class MainActivity : AppCompatActivity() {
 //                }
 //            }
 
-
+        // Call the layout inflater for the custom dialog layout
         val view = LayoutInflater.from(this).inflate(R.layout.custom_dialog_read, null)
 
+        // Set RecyclerView
         recyclerView = view.findViewById(R.id.read_recycler_view)
         recyclerView.layoutManager = LinearLayoutManager(this)
         userList = arrayListOf()
+        val adapter = UsersAdapter(userList)
+        recyclerView.adapter = adapter
 
+        // Set Dialog
         val builder = AlertDialog.Builder(this)
             .setTitle("Read Data")
             .setView(view)
@@ -168,20 +172,40 @@ class MainActivity : AppCompatActivity() {
                         val user = document.toObject(UserModel::class.java)
                         userList.add(user)
                     }
-                    recyclerView.adapter = UsersAdapter(userList)
+                    adapter.notifyDataSetChanged()
                     view.findViewById<ProgressBar>(R.id.progress_bar).visibility = View.GONE
                     view.findViewById<RecyclerView>(R.id.read_recycler_view).visibility = View.VISIBLE
                 }
             }
+
+        view.findViewById<Button>(R.id.read_button).setOnClickListener {
+            val userID = adapter.getSelectedUserID()
+            Firebase.firestore
+                .collection("users")
+                .document(userID)
+                .get()
+                .addOnSuccessListener {
+                    if (it.exists()) {
+                        val user = it.toObject(UserModel::class.java)
+                        if (user != null) {
+                            updateUI(user)
+                        }
+                    }
+                }
+            dialog.dismiss()
+        }
+        view.findViewById<TextView>(R.id.cancel_text_view).setOnClickListener {
+            dialog.dismiss()
+        }
     }
 
-    private fun updateUI(firstName: String, middleInitial: String, lastName: String, age: String, dateOfBirth: String, gender: String) {
-        binding.firstNameReadText.text = "First Name: $firstName"
-        binding.middleNameReadText.text = "Middle Initial: $middleInitial"
-        binding.lastNameReadText.text = "Last Name: $lastName"
-        binding.ageReadText.text = "Age: $age"
-        binding.dateOfBirthReadText.text = "Date of Birth: $dateOfBirth"
-        binding.genderRadioGroupRead.check(if (gender == "Male") binding.maleRadioButtonRead.id else binding.femaleRadioButtonRead.id)
+    private fun updateUI(user: UserModel) {
+        binding.firstNameReadText.text = "First Name: ${user.firstName}"
+        binding.middleNameReadText.text = "Middle Initial: ${user.middleInitial}"
+        binding.lastNameReadText.text = "Last Name: ${user.lastName}"
+        binding.ageReadText.text = "Age: ${user.age}"
+        binding.dateOfBirthReadText.text = "Date of Birth: ${user.dateOfBirth}"
+        binding.genderRadioGroupRead.check(if (user.gender == "Male") binding.maleRadioButtonRead.id else binding.femaleRadioButtonRead.id)
 
         binding.readTextLayout.visibility = View.VISIBLE
 
@@ -216,7 +240,10 @@ class MainActivity : AppCompatActivity() {
 //                Toast.makeText(this, "Updated Whole Data", Toast.LENGTH_SHORT).show()
 //            }
 
+        // Call the layout inflater for the custom dialog layout
         val view = LayoutInflater.from(this).inflate(R.layout.custom_dialog_update, null)
+
+        // Set Dialog
         val builder = AlertDialog.Builder(this)
             .setTitle("Enter Data")
             .setView(view)

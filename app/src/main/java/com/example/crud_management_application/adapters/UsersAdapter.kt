@@ -14,6 +14,7 @@ class UsersAdapter(
 ): RecyclerView.Adapter<UsersAdapter.MyViewHolder>() {
 
     private var selectedItemPosition: Int = -1
+    private var currentUserID: String = ""
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         val itemView = LayoutInflater.from(parent.context).inflate(R.layout.layout_users, parent, false)
@@ -35,13 +36,18 @@ class UsersAdapter(
                 notifyItemChanged(selectedItemPosition)
                 selectedItemPosition = holder.adapterPosition
                 notifyItemChanged(selectedItemPosition)
+                currentUserID = user.userID
             }
         }
     }
 
     class MyViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        val userId = itemView.findViewById<TextView>(R.id.user_id)
-        val name = itemView.findViewById<TextView>(R.id.user_name)
-        val radioButton = itemView.findViewById<RadioButton>(R.id.read_radio_button)
+        val userId: TextView = itemView.findViewById(R.id.user_id)
+        val name: TextView = itemView.findViewById(R.id.user_name)
+        val radioButton: RadioButton = itemView.findViewById(R.id.read_radio_button)
+    }
+
+    fun getSelectedUserID(): String {
+        return currentUserID
     }
 }
