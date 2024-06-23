@@ -1,7 +1,7 @@
 package com.example.crud_management_application.data_models
 
 data class UserModel(
-    val userId: String = "",
+    val userID: String = "",
     val firstName: String = "",
     val middleInitial: String = "",
     val lastName: String = "",

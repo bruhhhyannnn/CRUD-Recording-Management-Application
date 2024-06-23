@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.widget.Button
 import android.widget.EditText
+import android.widget.ProgressBar
 import android.widget.RadioButton
 import android.widget.RadioGroup
 import android.widget.TextView
@@ -47,25 +48,13 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setInProgress(inProgress: Boolean, from: String) {
-        if (from == "read") {
-            if (inProgress) {
-                binding.readProgressBar.visibility = View.VISIBLE
-                binding.readTextLayout.visibility = View.GONE
-            }
-            else {
-                binding.readProgressBar.visibility = View.GONE
-                binding.readTextLayout.visibility = View.VISIBLE
-            }
+        if (inProgress) {
+            binding.createProgressBar.visibility = View.VISIBLE
+            binding.createButton.visibility = View.GONE
         }
         else {
-            if (inProgress) {
-                binding.createProgressBar.visibility = View.VISIBLE
-                binding.createButton.visibility = View.GONE
-            }
-            else {
-                binding.createProgressBar.visibility = View.GONE
-                binding.createButton.visibility = View.VISIBLE
-            }
+            binding.createProgressBar.visibility = View.GONE
+            binding.createButton.visibility = View.VISIBLE
         }
     }
 
@@ -168,7 +157,8 @@ class MainActivity : AppCompatActivity() {
         val dialog = builder.create()
         dialog.show()
 
-        setInProgress(true, "read")
+        view.findViewById<ProgressBar>(R.id.progress_bar).visibility = View.VISIBLE
+        view.findViewById<RecyclerView>(R.id.read_recycler_view).visibility = View.GONE
         Firebase.firestore
             .collection("users")
             .get()
@@ -179,6 +169,8 @@ class MainActivity : AppCompatActivity() {
                         userList.add(user)
                     }
                     recyclerView.adapter = UsersAdapter(userList)
+                    view.findViewById<ProgressBar>(R.id.progress_bar).visibility = View.GONE
+                    view.findViewById<RecyclerView>(R.id.read_recycler_view).visibility = View.VISIBLE
                 }
             }
     }
