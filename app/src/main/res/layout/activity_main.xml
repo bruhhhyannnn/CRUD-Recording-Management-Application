@@ -15,7 +15,7 @@
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:padding="20dp"
-        android:text="@string/app_name"
+        android:text="CRUD Recording Management"
         android:textSize="30sp"
         android:textStyle="bold" />
 
