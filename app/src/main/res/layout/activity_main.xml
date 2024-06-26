@@ -4,14 +4,16 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:layout_margin="10dp"
+    android:padding="10dp"
     android:orientation="vertical"
+
     tools:context=".MainActivity">
 
     <!-- HEADER -->
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/background_color"
         android:fontFamily="sans-serif-medium"
         android:gravity="center"
         android:padding="20dp"
@@ -32,7 +34,7 @@
             android:gravity="center"
             android:background="@drawable/layout_copyright"
             android:layout_marginBottom="10dp"
-            android:textStyle="bold"
+            android:textStyle="italic"
             android:textSize="22sp"
             android:text="Create" />
 
@@ -102,7 +104,7 @@
             android:gravity="center"
             android:background="@drawable/layout_copyright"
             android:layout_marginBottom="10dp"
-            android:textStyle="bold"
+            android:textStyle="italic"
             android:textSize="22sp"
             android:text="Read" />
 
@@ -117,26 +119,41 @@
                 android:id="@+id/first_name_read_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:padding="5dp"
                 android:text="First Name: " />
             <TextView
                 android:id="@+id/middle_name_read_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Middle Name: " />
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:padding="5dp"
+                android:text="Middle Initial: " />
             <TextView
                 android:id="@+id/last_name_read_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:padding="5dp"
                 android:text="Last Name: " />
             <TextView
                 android:id="@+id/age_read_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:padding="5dp"
                 android:text="Age: " />
             <TextView
                 android:id="@+id/date_of_birth_read_text"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textStyle="bold"
+                android:textSize="18sp"
+                android:padding="5dp"
                 android:text="Date of Birth: " />
             <RadioGroup
                 android:id="@+id/gender_radio_group_read"
@@ -150,6 +167,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="false"
+                    android:textStyle="bold"
                     android:text="Male" />
 
                 <RadioButton
@@ -157,6 +175,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:clickable="false"
+                    android:textStyle="bold"
                     android:text="Female" />
             </RadioGroup>
         </LinearLayout>
@@ -181,13 +200,6 @@
                 android:layout_height="wrap_content"
                 android:backgroundTint="@color/button_color"
                 android:text="Create" />
-            <ProgressBar
-                android:id="@+id/create_progress_bar"
-                android:layout_width="30dp"
-                android:visibility="gone"
-                android:layout_marginRight="10dp"
-                android:layout_marginLeft="10dp"
-                android:layout_height="wrap_content"/>
 
             <Button
                 android:id="@+id/read_button"
@@ -210,6 +222,12 @@
                 android:backgroundTint="@color/button_color"
                 android:text="Delete" />
         </LinearLayout>
+        <ProgressBar
+            android:id="@+id/create_progress_bar"
+            android:layout_width="30dp"
+            android:visibility="gone"
+            android:layout_gravity="center"
+            android:layout_height="wrap_content"/>
     </LinearLayout>
 
     <RelativeLayout

@@ -5,4 +5,5 @@
 
     <color name="button_color">#D84E4E4E</color>
     <color name="copyright_color">#2C9A9A9A</color>
+    <color name="background_color">#fff0e5</color>
 </resources>
