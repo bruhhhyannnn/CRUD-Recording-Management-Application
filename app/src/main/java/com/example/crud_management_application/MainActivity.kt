@@ -29,7 +29,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var view: View
     private lateinit var dialog: AlertDialog
 
-    lateinit var binding: ActivityMainBinding
+    private lateinit var binding: ActivityMainBinding
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -83,10 +83,6 @@ class MainActivity : AppCompatActivity() {
         val sex = binding.genderRadioGroup.checkedRadioButtonId
         val gender = if (sex == binding.maleRadioButton.id) "Male" else "Female"
 
-        addDataToFirebase(firstName, middleInitial, lastName, age, dateOfBirth, gender)
-    }
-
-    private fun addDataToFirebase(firstName: String, middleInitial: String, lastName: String, age: String, dateOfBirth: String, gender: String) {
         val data = hashMapOf(
             "firstName" to firstName,
             "middleInitial" to middleInitial,
@@ -95,7 +91,10 @@ class MainActivity : AppCompatActivity() {
             "dateOfBirth" to dateOfBirth,
             "gender" to gender
         )
+        addDataToFirebase(data)
+    }
 
+    private fun addDataToFirebase(data: HashMap<String, String>) {
         // add data (with auto id for document)
         setInProgress(true)
         Firebase.firestore
@@ -213,21 +212,17 @@ class MainActivity : AppCompatActivity() {
                 .collection("users")
                 .document(userID)
                 .get()
-                .addOnSuccessListener {
-                    if (it.exists()) {
-                        val firstName = it.getString("firstName")
-                        val middleInitial = it.getString("middleInitial")
-                        val lastName = it.getString("lastName")
-                        val age = it.getString("age")
-                        val dateOfBirth = it.getString("dateOfBirth")
-                        val gender = it.getString("gender")
-
-                        updateView.findViewById<EditText>(R.id.first_name_text).setText(firstName)
-                        updateView.findViewById<EditText>(R.id.middle_initial_text).setText(middleInitial)
-                        updateView.findViewById<EditText>(R.id.last_name_text).setText(lastName)
-                        updateView.findViewById<EditText>(R.id.age_text).setText(age)
-                        updateView.findViewById<EditText>(R.id.date_of_birth_text).setText(dateOfBirth)
-                        updateView.findViewById<RadioGroup>(R.id.gender_radio_group).check(if (gender == "Male") updateView.findViewById<RadioButton>(R.id.male_radio_button).id else updateView.findViewById<RadioButton>(R.id.female_radio_button).id)
+                .addOnSuccessListener {document ->
+                    if (document.exists()) {
+                        val user = document.toObject(UserModel::class.java)
+                        if(user != null) {
+                            updateView.findViewById<EditText>(R.id.first_name_text).setText(user.firstName)
+                            updateView.findViewById<EditText>(R.id.middle_initial_text).setText(user.middleInitial)
+                            updateView.findViewById<EditText>(R.id.last_name_text).setText(user.lastName)
+                            updateView.findViewById<EditText>(R.id.age_text).setText(user.age)
+                            updateView.findViewById<EditText>(R.id.date_of_birth_text).setText(user.dateOfBirth)
+                            updateView.findViewById<RadioGroup>(R.id.gender_radio_group).check(if (user.gender == "Male") updateView.findViewById<RadioButton>(R.id.male_radio_button).id else updateView.findViewById<RadioButton>(R.id.female_radio_button).id)
+                        }
                     }
                 }
 
@@ -302,139 +297,3 @@ class MainActivity : AppCompatActivity() {
         }
     }
 }
-
-
-
-// Create Data Whole
-//    val data = hashMapOf(
-//        "firstName" to firstName,
-//        "middleInitial" to middleInitial,
-//        "lastName" to lastName,
-//        "age" to age,
-//        "dateOfBirth" to dateOfBirth,
-//        "gender" to gender
-//    )
-//
-//    // add data (with auto id for document)
-//    setInProgress(true)
-//    Firebase.firestore
-//    .collection("users")
-//    .add(data)
-//    .addOnSuccessListener {
-//        val userId = mapOf(
-//            "userID" to it.id
-//        )
-//        Firebase.firestore
-//            .collection("users")
-//            .document(it.id)
-//            .update(userId)
-//            .addOnSuccessListener {
-//                Toast.makeText(this, "Data added successfully", Toast.LENGTH_SHORT).show()
-//                binding.firstNameText.text.clear()
-//                binding.middleInitialText.text.clear()
-//                binding.lastNameText.text.clear()
-//                binding.ageText.text.clear()
-//                binding.dateOfBirthText.text.clear()
-//                setInProgress(false)
-
-// Create Data Specific (same as update data specific)
-//        val data = mapOf(
-//            "bio" to "test bio"
-//        )
-//        Firebase.firestore
-//            .collection("users")
-//            .document("kaRbkTayAbj28dQA0FtQ")
-//            .update(data)
-//            .addOnSuccessListener {
-//                Toast.makeText(this, "Data added successfully", Toast.LENGTH_SHORT).show()
-//            }
-
-
-
-// Read Data Whole
-//        setInProgress(true, "read")
-//        Firebase.firestore
-//            .collection("users")
-//            .document("user1")
-//            .get()
-//            .addOnSuccessListener {
-//                if (it.exists()) {
-//                    val firstName = it.getString("firstName").toString()
-//                    val middleInitial = it.getString("middleInitial").toString()
-//                    val lastName = it.getString("lastName").toString()
-//                    val age = it.getString("age").toString()
-//                    val dateOfBirth = it.getString("dateOfBirth").toString()
-//                    val gender = it.getString("gender").toString()
-//
-//                    updateUI(firstName, middleInitial, lastName, age, dateOfBirth, gender)
-//                    setInProgress(false, "read")
-//                }
-//            }
-
-// Read Data Specific
-//        setInProgress(true, "read")
-//        Firebase.firestore
-//            .collection("users")
-//            .document("user1")
-//            .get()
-//            .addOnSuccessListener {
-//                if(it.exists()) {
-//                    val gender = it.getString("gender")
-//
-//                    binding.genderRadioGroupRead.check(if (gender == "Male") binding.maleRadioButtonRead.id else binding.femaleRadioButtonRead.id)
-//
-//                    setInProgress(true, "read")
-//                    binding.readTextLayout.visibility = View.VISIBLE
-//                }
-//            }
-
-
-
-// Update Whole
-//        val data2 = hashMapOf(
-//            "firstName" to "watol big booba"
-//        )
-//        Firebase.firestore
-//            .collection("users")
-//            .document("user1")
-//            .set(data2)
-//            .addOnSuccessListener {
-//                Toast.makeText(this, "Updated Whole Data", Toast.LENGTH_SHORT).show()
-//            }
-
-// Update Specific (same as create data specific)
-//        val data = mapOf(
-//            "firstName" to "watol",
-//            "gender" to "Female"
-//        )
-//
-//        Firebase.firestore
-//            .collection("users")
-//            .document("user1")
-//            .update(data)
-//            .addOnSuccessListener {
-//                Toast.makeText(this, "Updated Data", Toast.LENGTH_SHORT).show()
-//            }
-
-
-
-// Delete Whole
-//        Firebase.firestore
-//            .collection("users")
-//            .document("user1")
-//            .delete()
-//            .addOnSuccessListener {
-//                Toast.makeText(this, "Deleted whole Data", Toast.LENGTH_SHORT).show()
-//            }
-
-// Delete Specific
-//        val mapDelete = mapOf(
-//            "firstName" to FieldValue.delete()
-//        )
-//        Firebase.firestore
-//            .collection("users")
-//            .document("user1")
-//            .update(mapDelete)
-//            .addOnSuccessListener {
-//                Toast.makeText(this, "Deleted specific Data", Toast.LENGTH_SHORT).show()
-//            }
